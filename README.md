@@ -44,20 +44,20 @@ Successivamente, aggiungi il processo di inizializzazione di CommunityToolkit.Ma
 
     public static class MauiProgram
     {
-    public static MauiApp CreateMauiApp()
-    {
-        var builder = MauiApp.CreateBuilder();
-        builder
-            .UseMauiApp<App>()
-            .UseMauiCommunityToolkit()
-            .ConfigureFonts(fonts =>
-            {
-                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-            });
+        public static MauiApp CreateMauiApp()
+        {
+            var builder = MauiApp.CreateBuilder();
+            builder
+                .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
+                .ConfigureFonts(fonts =>
+                {
+                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                });
 
-        return builder.Build();
-        }
+            return builder.Build();
+         }
     }
 
 Ora siamo pronti per usare l'Expander.
@@ -143,6 +143,111 @@ Introdurrò il codice di esempio di Expander. Il codice XAML è il seguente.
     </ScrollView>
 
   </ContentPage>
+  
+È possibile introdure all'interno di Un CollectionView ch'è un oggetto che viene popolato con dati impostandone la ItemsSource proprietà su qualsiasi raccolta che implementa IEnumerable. L'aspetto di ogni elemento nell'elenco può essere definito impostando la proprietà ItemTemplate su .DataTemplate
+## Codice d'esempio
+![delivery_android2](https://github.com/salisou/MauiPlugingExpresionPanel/blob/master/CollectionView.PNG)
+
+        <?xml version="1.0" encoding="utf-8" ?>
+        <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                     xmlns:md="clr-namespace:MauiPlugingExpresionPanel.Models"
+                     xmlns:vm="clr-namespace:MauiPlugingExpresionPanel.ViewModels"
+                     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+                     x:Class="MauiPlugingExpresionPanel.Views.ExpandableList"
+                     Title="ExpandableList">
+
+            <VerticalStackLayout>
+                <Grid BackgroundColor="#F3F5F9" RowSpacing="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="180"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid BackgroundColor="#455399" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                        <StackLayout Margin="0,-40,0,0" HorizontalOptions="Center" VerticalOptions="Center">
+                            <Label TextColor="White" FontSize="40" HorizontalTextAlignment="Center">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <FormattedString.Spans>
+                                            <Span Text=".NET " FontSize="40" FontAttributes="Bold"/>
+                                            <Span Text="Developer"/>
+                                        </FormattedString.Spans>
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                            <Label Text="'Expander on .Net Maui'" TextColor="White" FontSize="15" HorizontalTextAlignment="Center" Margin="0,-10,0,0"/>
+                        </StackLayout>
+                    </Grid>
+
+                    <CollectionView Grid.Row="3" Margin="25" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
+                                SelectionMode="None" ItemsSource="{Binding val}">
+                        <CollectionView.Header>
+                            <Label Text="Profilo .Net Developer" TextColor="Black" FontSize="18"/>
+                        </CollectionView.Header>
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Vertical" ItemSpacing="20"/>
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <toolkit:Expander x:Name="MyExpander" IsExpanded="False">
+                                    <!--  Intestazione del expander -->
+                                    <toolkit:Expander.Header>
+                                        <Grid  ColumnDefinitions="*" HeightRequest="45">
+                                            <Grid.Resources>
+                                                <Style TargetType="Label">
+                                                    <Setter Property="FontSize" Value="18" />
+                                                    <Setter Property="FontAttributes" Value="Bold" />
+                                                    <Setter Property="VerticalTextAlignment" Value="Center" />
+                                                </Style>
+                                            </Grid.Resources>
+                                            <Border Padding="5" BackgroundColor="#F1F1F1">
+                                                <StackLayout Orientation="Horizontal">
+                                                    <Label  Text="{Binding Profil}" />
+                                                    <Image HeightRequest="25" WidthRequest="25" HorizontalOptions="EndAndExpand">
+                                                        <Image.Triggers>
+                                                            <DataTrigger TargetType="Image" 
+                                                                 Binding="{Binding Source={x:Reference MyExpander}, Path=IsExpanded}" 
+                                                                 Value="True">
+                                                                <Setter Property="Source" Value="up_arrow"/>
+                                                            </DataTrigger>
+                                                            <DataTrigger TargetType="Image" 
+                                                                 Binding="{Binding Source={x:Reference MyExpander}, Path=IsExpanded}" 
+                                                                 Value="False">
+                                                                <Setter Property="Source" Value="down_arrow"/>
+                                                            </DataTrigger>
+                                                        </Image.Triggers>
+                                                    </Image>
+                                                </StackLayout>
+                                                <Border.StrokeShape>
+                                                    <RoundRectangle CornerRadius="16"/>
+                                                </Border.StrokeShape>
+                                            </Border>
+                                        </Grid>
+                                    </toolkit:Expander.Header>
+                                    <!--  Contenuto expander  -->
+                                    <toolkit:Expander.Content>
+                                        <Frame Margin="5"  BorderColor="Gray"  CornerRadius="16">
+                                            <Grid ColumnDefinitions="60, *">
+                                                <Image MaximumHeightRequest="50" MaximumWidthRequest="50" Source="man.png" />
+                                                <VerticalStackLayout Grid.Column="1" Margin="10,0,0,0">
+                                                    <Label FontSize="20" Text="{Binding Name} " TextColor="#086bed" />
+                                                    <Label Text="{Binding Description}" />
+                                                    <Label FontSize="12" Text="{Binding Email}" />
+                                                </VerticalStackLayout>
+                                            </Grid>
+                                        </Frame>
+                                    </toolkit:Expander.Content>
+                                </toolkit:Expander>
+
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Grid>
+            </VerticalStackLayout>
+        </ContentPage>
+
+
   
 <h3 align="left">Support Me:</h3>
 <p><a aling="center" href="https://www.buymeacoffee.com/salisoumouW"> <img aling="center" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="50" width="210" alt="Moussa" /></a><a href="https://ko-fi.com/salisoumoussa"> <img aling="center" src="https://cdn.ko-fi.com/cdn/kofi3.png?v=3" height="50" width="210" alt="saliou" /></a></p><br><br>
