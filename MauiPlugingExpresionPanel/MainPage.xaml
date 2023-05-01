@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="MauiPlugingExpresionPanel.MainPage">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Spacing="25"
+            Padding="30,0"
+            VerticalOptions="Center">
+
+          
+            <toolkit:Expander x:Name="MyExpander" IsExpanded="False">
+                <!--  Intestazione del expander -->
+                <toolkit:Expander.Header>
+                    <Grid  ColumnDefinitions="*" HeightRequest="45">
+                        <Grid.Resources>
+                            <Style TargetType="Label">
+                                <Setter Property="FontSize" Value="18" />
+                                <Setter Property="FontAttributes" Value="Bold" />
+                                <Setter Property="VerticalTextAlignment" Value="Center" />
+                            </Style>
+                        </Grid.Resources>
+                        <Border Padding="5" BackgroundColor="#F1F1F1">
+                            <StackLayout Orientation="Horizontal">
+                                <Label  Text="Profilo Programmatore" />
+                                <Image HeightRequest="25" WidthRequest="25" HorizontalOptions="EndAndExpand">
+                                    <Image.Triggers>
+                                        <DataTrigger TargetType="Image" 
+                                                         Binding="{Binding Source={x:Reference MyExpander}, Path=IsExpanded}" 
+                                                         Value="True">
+                                            <Setter Property="Source" Value="up_arrow"/>
+                                        </DataTrigger>
+                                        <DataTrigger TargetType="Image" 
+                                                         Binding="{Binding Source={x:Reference MyExpander}, Path=IsExpanded}" 
+                                                         Value="False">
+                                            <Setter Property="Source" Value="down_arrow"/>
+                                        </DataTrigger>
+                                    </Image.Triggers>
+                                </Image>
+                            </StackLayout>
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="16"/>
+                            </Border.StrokeShape>
+                        </Border>
+                    </Grid>
+                </toolkit:Expander.Header>
+                <!--  Contenuto expander  -->
+                <toolkit:Expander.Content>
+                    <Frame Margin="5"  BorderColor="Gray"  CornerRadius="16">
+                        <Grid ColumnDefinitions="60, *">
+                            <Image MaximumHeightRequest="50" MaximumWidthRequest="50" Source="man.png" />
+                            <VerticalStackLayout Grid.Column="1" Margin="10,0,0,0">
+                                <Label FontSize="20" Text="Moussa " TextColor="#086bed" />
+                                <Label Text="Full Stack .Net Developer" />
+                                <Label FontSize="12" Text="E-mail : xxx.xxxxx@gmail.com" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Frame>
+                </toolkit:Expander.Content>
+            </toolkit:Expander>
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
